@@ -1,0 +1,40 @@
+pipeline {
+    agent any
+    stages {
+        stage('18066487 STG1') {
+            steps {
+                echo '18066487 STG1: Push change to production web server?'
+                input 'Proceed or Abort?'
+            }
+        }
+        stage('18066487 STG2') {
+            steps {
+                sh 'bolt script run \'/…/18066487_script\''
+                echo '18066487 STG2 - Push to production web server completed'
+            }
+        }
+        stage('18066487 STG3') {
+            steps {
+                echo '18066487 STG3: Proceed to test production web service?'
+                input 'Proceed or Abort?'
+            }
+        }
+        stage('18066487 STG4') {
+            steps {
+                sh 'curl –Is http://18066487-websvr.localdomain |head –n 1  > /tmp/web-test-result'
+                echo 'STG4: Production web server testing completed'
+            }
+        }
+        stage('18066487 STG5') {
+            steps {
+                echo '18066487 STG5: Web server testing result has been inspected'
+                input 'Proceed or Abort?'
+            }
+        }
+        stage('18066487 STG6') {
+            steps {
+                echo '18066487 STG6: Production Operation is successful.'
+            }
+        }
+    }
+}

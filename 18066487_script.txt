@@ -1,0 +1,30 @@
+# Ensure Apache2 service is installed and running
+class { 'apache': 
+  service_ensure => 'running',
+  service_enable => true,
+}
+
+# Remove and recreate /tmp/18066487/clone directory
+file { '/tmp/18066487/clone':
+  ensure  => absent,
+  recurse => true,
+  force   => true,
+}
+file { '/tmp/18066487/clone':
+  ensure  => directory,
+  mode    => '0755',
+}
+
+# Clone 18066487_repo to /tmp/18066487/clone directory
+exec { 'clone-repo':
+  command => 'git clone https://github.com/18066487/18066487_repo.git /tmp/18066487/clone',
+  creates => '/tmp/18066487/clone',
+}
+
+# Copy new index.html to replace /var/www/html/index.html
+file { '/var/www/html/index.html':
+  source  => '/tmp/18066487/clone/index.html',
+  mode    => '0644',
+  owner   => 'root',
+  group   => 'root',
+}
